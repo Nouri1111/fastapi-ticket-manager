@@ -59,3 +59,5 @@ ruff_cache/
 # GitHub workflows and VS Code settings
 .github/
 .vscode/
+
+app.db*

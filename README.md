@@ -1,7 +1,7 @@
 # FastAPI Ticket Manager
 
 ## Overview
-This project is a FastAPI-based backend application for managing tickets. It includes features such as creating, updating, listing, and closing tickets. The application follows a clean, layered architecture and uses SQLite as an in-memory database.
+This project is a FastAPI-based backend application for managing tickets. It includes features such as creating, updating, listing, and closing tickets. The application follows a clean, layered architecture and uses SQLite as the default database.
 
 ## Features
 - **Endpoints**:
@@ -13,12 +13,13 @@ This project is a FastAPI-based backend application for managing tickets. It inc
 - **Middleware**: Logs execution time for each request.
 - **Swagger Documentation**: Auto-generated at `/docs`.
 - **Unit Tests**: Includes pytest tests with ≥80% coverage.
+- **Test Coverage**: Easily check test coverage using `pytest-cov`.
 
 ## Requirements
 - Python 3.10+
 - FastAPI
 - Uvicorn
-- SQLite (in-memory)
+- SQLite (default database)
 
 ## Installation
 1. Clone the repository:
@@ -51,8 +52,44 @@ This project is a FastAPI-based backend application for managing tickets. It inc
 ## Running Tests
 Run the unit tests using pytest:
 ```bash
-pytest --cov=app tests/
+pytest --cov=app --cov-report=term-missing
 ```
+
+### Complete Command-Line Examples for Running Tests
+1. **Run all tests**:
+   ```bash
+   pytest
+   ```
+
+2. **Run tests with coverage report**:
+   ```bash
+   pytest --cov=app --cov-report=term-missing
+   ```
+
+3. **Run a specific test file**:
+   ```bash
+   pytest tests/test_tickets.py
+   ```
+
+4. **Run a specific test function**:
+   ```bash
+   pytest tests/test_tickets.py::test_create_ticket
+   ```
+
+5. **Run tests with detailed output**:
+   ```bash
+   pytest -v
+   ```
+
+6. **Run tests and stop on the first failure**:
+   ```bash
+   pytest -x
+   ```
+
+7. **Run tests with a minimum coverage threshold**:
+   ```bash
+   pytest --cov=app --cov-report=term-missing --cov-fail-under=80
+   ```
 
 ## Project Structure
 ```
@@ -73,7 +110,7 @@ app/
   ├── routers/               # API endpoints
   │     └── ticket_router.py
   └── tests/                 # Unit tests
-      └── ...
+      └── test_tickets.py    # Test cases for ticket management
 ```
 
 ## Optional Files
@@ -88,3 +125,14 @@ app/
   - `make build`: Build the Docker image.
 
 - **pyproject.toml**: Configuration file for `ruff`, a fast Python linter. It specifies linting rules and settings. Run `ruff app/ tests/` to check for linting issues or `ruff app/ tests/ --fix` to auto-fix them.
+
+## Notes
+- Ensure that the `PYTHONPATH` is set correctly if running tests manually:
+  ```bash
+  export PYTHONPATH=$(pwd)
+  ```
+- Use `pytest` fixtures to reset the database state between tests.
+
+## License
+This project is licensed under the MIT License.
+

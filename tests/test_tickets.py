@@ -20,6 +20,14 @@ app.dependency_overrides[get_db] = override_get_db
 
 client = TestClient(app)
 
+@pytest.fixture(autouse=True)
+def clear_database():
+    """
+    Clear the database before each test to ensure a clean state.
+    """
+    Base.metadata.drop_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
+
 # Test health check
 def test_health_check():
     response = client.get("/")
@@ -47,7 +55,7 @@ def test_list_tickets():
     response = client.get("/tickets/")
     assert response.status_code == 200
     data = response.json()
-    assert len(data) == 2
+    assert len(data) == 2  # Ensure only the two tickets created in this test are returned
 
 # Test retrieving a ticket
 def test_get_ticket():

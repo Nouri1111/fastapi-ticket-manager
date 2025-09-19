@@ -18,7 +18,7 @@ def get_tickets(db: Session) -> list[Ticket]:
 def update_ticket(db: Session, ticket_id: int, ticket: TicketUpdate) -> Ticket | None:
     db_ticket = db.query(Ticket).filter(Ticket.id == ticket_id).first()
     if db_ticket:
-        for key, value in ticket.dict(exclude_unset=True).items():
+        for key, value in ticket.model_dump(exclude_unset=True).items():
             setattr(db_ticket, key, value)
         db.commit()
         db.refresh(db_ticket)
