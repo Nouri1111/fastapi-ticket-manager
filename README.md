@@ -157,6 +157,3 @@ This project is licensed under the MIT License.
   ```
 - Use `pytest` fixtures to reset the database state between tests.
 
-## License
-This project is licensed under the MIT License.
-
