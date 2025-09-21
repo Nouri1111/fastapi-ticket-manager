@@ -55,41 +55,42 @@ Run the unit tests using pytest:
 pytest --cov=app --cov-report=term-missing
 ```
 
-### Complete Command-Line Examples for Running Tests
-1. **Run all tests**:
+### Detailed Steps for Using `pytest --cov=app --cov-report=term-missing`
+
+1. **Install `pytest` and `pytest-cov`**:
+   Ensure that `pytest` and `pytest-cov` are installed in your environment. These are already included in the `requirements.txt` file. If not installed, run:
    ```bash
-   pytest
+   pip install pytest pytest-cov
    ```
 
-2. **Run tests with coverage report**:
+2. **Run Tests with Coverage**:
+   Use the following command to run all tests and generate a coverage report:
    ```bash
    pytest --cov=app --cov-report=term-missing
    ```
 
-3. **Run a specific test file**:
-   ```bash
-   pytest tests/test_tickets.py
-   ```
+   - `--cov=app`: Specifies the directory (`app`) to measure test coverage for.
+   - `--cov-report=term-missing`: Displays the coverage report in the terminal, highlighting lines of code that are not covered by tests.
 
-4. **Run a specific test function**:
-   ```bash
-   pytest tests/test_tickets.py::test_create_ticket
-   ```
-
-5. **Run tests with detailed output**:
-   ```bash
-   pytest -v
-   ```
-
-6. **Run tests and stop on the first failure**:
-   ```bash
-   pytest -x
-   ```
-
-7. **Run tests with a minimum coverage threshold**:
+3. **Set a Minimum Coverage Threshold** (Optional):
+   To enforce a minimum coverage percentage (e.g., 80%), use the `--cov-fail-under` option:
    ```bash
    pytest --cov=app --cov-report=term-missing --cov-fail-under=80
    ```
+
+   If the coverage falls below the threshold, the command will fail.
+
+4. **Generate an HTML Coverage Report** (Optional):
+   For a more detailed and visual representation of test coverage, generate an HTML report:
+   ```bash
+   pytest --cov=app --cov-report=html
+   ```
+   This will create an `htmlcov` directory. Open `htmlcov/index.html` in your browser to view the report.
+
+5. **Debug Missing Coverage**:
+   Use the `--cov-report=term-missing` output to identify untested lines. Add tests to cover these lines and rerun the command to improve coverage.
+
+---
 
 ## Project Structure
 ```
@@ -112,6 +113,29 @@ app/
   └── tests/                 # Unit tests
       └── test_tickets.py    # Test cases for ticket management
 ```
+
+## Optional Files
+
+- **Dockerfile**: Used to containerize the application. It defines the environment and dependencies required to run the application in a Docker container. Build the image using `docker build -t fastapi-ticket-manager .` and run it with `docker run -p 8000:8000 fastapi-ticket-manager`.
+
+- **Makefile**: Automates common tasks such as installing dependencies, running the application, testing, linting, and building Docker images. Example commands:
+  - `make install`: Install dependencies.
+  - `make run`: Start the application.
+  - `make test`: Run unit tests.
+  - `make lint`: Check code quality with `ruff`.
+  - `make build`: Build the Docker image.
+
+- **pyproject.toml**: Configuration file for `ruff`, a fast Python linter. It specifies linting rules and settings. Run `ruff app/ tests/` to check for linting issues or `ruff app/ tests/ --fix` to auto-fix them.
+
+## Notes
+- Ensure that the `PYTHONPATH` is set correctly if running tests manually:
+  ```bash
+  export PYTHONPATH=$(pwd)
+  ```
+- Use `pytest` fixtures to reset the database state between tests.
+
+## License
+This project is licensed under the MIT License.
 
 ## Optional Files
 

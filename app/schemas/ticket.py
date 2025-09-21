@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from datetime import datetime
 from enum import Enum
+from typing import Optional
 
 class TicketStatus(str, Enum):
     OPEN = "open"
@@ -9,18 +10,20 @@ class TicketStatus(str, Enum):
 
 class TicketBase(BaseModel):
     title: str
-    description: str | None = None
-    status: TicketStatus = TicketStatus.OPEN
+    description: Optional[str] = None
+
+    class Config:
+        from_attributes = True  # Updated from `orm_mode = True`
 
 class TicketCreate(TicketBase):
     pass
 
 class TicketUpdate(TicketBase):
-    pass
+    status: Optional[str] = None
 
 class TicketResponse(TicketBase):
     id: int
-    created_at: datetime
+    status: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True  # Updated from `orm_mode = True`
