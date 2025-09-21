@@ -6,34 +6,63 @@ from app.services.ticket_service import (
     create_new_ticket, get_all_tickets, get_ticket_by_id,
     update_existing_ticket, close_existing_ticket
 )
+from app.core.logger import logger  # Use the custom logger
 
 router = APIRouter(prefix="/tickets", tags=["Tickets"])
 
 @router.post("/", response_model=TicketResponse, status_code=status.HTTP_201_CREATED)
 def create_ticket(ticket: TicketCreate, db: Session = Depends(get_db)):
-    return create_new_ticket(db, ticket)
+    try:
+        logger.info("Creating a new ticket.")
+        return create_new_ticket(db, ticket)
+    except Exception as e:
+        logger.error(f"Error creating ticket: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 @router.get("/", response_model=list[TicketResponse])
 def list_tickets(db: Session = Depends(get_db)):
-    return get_all_tickets(db)
+    try:
+        logger.info("Fetching all tickets.")
+        return get_all_tickets(db)
+    except Exception as e:
+        logger.error(f"Error fetching tickets: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 @router.get("/{ticket_id}", response_model=TicketResponse)
 def get_ticket(ticket_id: int, db: Session = Depends(get_db)):
-    ticket = get_ticket_by_id(db, ticket_id)
-    if not ticket:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Ticket not found")
-    return ticket
+    try:
+        logger.info(f"Fetching ticket with ID: {ticket_id}")
+        ticket = get_ticket_by_id(db, ticket_id)
+        if not ticket:
+            logger.warning(f"Ticket with ID {ticket_id} not found.")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Ticket not found")
+        return ticket
+    except Exception as e:
+        logger.error(f"Error fetching ticket with ID {ticket_id}: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 @router.put("/{ticket_id}", response_model=TicketResponse)
 def update_ticket(ticket_id: int, ticket: TicketUpdate, db: Session = Depends(get_db)):
-    updated_ticket = update_existing_ticket(db, ticket_id, ticket)
-    if not updated_ticket:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Ticket not found")
-    return updated_ticket
+    try:
+        logger.info(f"Updating ticket with ID: {ticket_id}")
+        updated_ticket = update_existing_ticket(db, ticket_id, ticket)
+        if not updated_ticket:
+            logger.warning(f"Ticket with ID {ticket_id} not found.")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Ticket not found")
+        return updated_ticket
+    except Exception as e:
+        logger.error(f"Error updating ticket with ID {ticket_id}: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 @router.patch("/{ticket_id}/close", response_model=TicketResponse)
 def close_ticket(ticket_id: int, db: Session = Depends(get_db)):
-    closed_ticket = close_existing_ticket(db, ticket_id)
-    if not closed_ticket:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Ticket not found")
-    return closed_ticket
+    try:
+        logger.info(f"Closing ticket with ID: {ticket_id}")
+        closed_ticket = close_existing_ticket(db, ticket_id)
+        if not closed_ticket:
+            logger.warning(f"Ticket with ID {ticket_id} not found.")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Ticket not found")
+        return closed_ticket
+    except Exception as e:
+        logger.error(f"Error closing ticket with ID {ticket_id}: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")

@@ -48,12 +48,19 @@ def initialize_database() -> None:
         raise
 
 # Initialize the database
-initialize_database()
+try:
+    initialize_database()
+except Exception as e:
+    logger.critical(f"Failed to initialize the database: {e}")
 
 @app.get("/")
 def health_check():
     """
     Health check endpoint to verify the service is running.
     """
-    logger.info("Health check endpoint called.")
-    return {"status": "ok"}
+    try:
+        logger.info("Health check endpoint called.")
+        return {"status": "ok"}
+    except Exception as e:
+        logger.error(f"Error in health check endpoint: {e}")
+        return {"status": "error", "detail": str(e)}
