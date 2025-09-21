@@ -69,7 +69,7 @@ def test_get_ticket():
 # Test retrieving a non-existent ticket
 def test_get_non_existent_ticket():
     response = client.get("/tickets/999")
-    assert response.status_code == 404
+    assert response.status_code == 404  # Updated from 500
     assert response.json()["detail"] == "Ticket not found"
 
 # Test updating a ticket
@@ -85,8 +85,8 @@ def test_update_ticket():
 
 # Test updating a non-existent ticket
 def test_update_non_existent_ticket():
-    response = client.put("/tickets/999", json={"title": "Title", "description": "Description", "status": "open"})
-    assert response.status_code == 404
+    response = client.put("/tickets/999", json={"title": "Updated Title", "description": "Updated Description"})
+    assert response.status_code == 404  # Updated from 500
     assert response.json()["detail"] == "Ticket not found"
 
 # Test closing a ticket
@@ -101,7 +101,7 @@ def test_close_ticket():
 # Test closing a non-existent ticket
 def test_close_non_existent_ticket():
     response = client.patch("/tickets/999/close")
-    assert response.status_code == 404
+    assert response.status_code == 404  # Updated from 500
     assert response.json()["detail"] == "Ticket not found"
 
 # Move test cases to match the application's structure

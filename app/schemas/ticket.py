@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 from enum import Enum
 from typing import Optional
@@ -12,8 +12,7 @@ class TicketBase(BaseModel):
     title: str
     description: Optional[str] = None
 
-    class Config:
-        from_attributes = True  # Updated from `orm_mode = True`
+    model_config = ConfigDict(from_attributes=True)  # Updated from `Config`
 
 class TicketCreate(TicketBase):
     pass
@@ -25,5 +24,4 @@ class TicketResponse(TicketBase):
     id: int
     status: str
 
-    class Config:
-        from_attributes = True  # Updated from `orm_mode = True`
+    model_config = ConfigDict(from_attributes=True)  # Updated from `Config`
