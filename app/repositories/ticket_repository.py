@@ -3,13 +3,13 @@ from app.models.ticket import Ticket
 from app.schemas.ticket import TicketCreate, TicketUpdate
 from app.core.logger import logger  # Use the custom logger
 
-def create_ticket(db: Session, ticket: TicketCreate) -> Ticket:
-    logger.info("Creating a new ticket.")
-    db_ticket = Ticket(**ticket.model_dump())  # Updated from `ticket.dict()`
+def create_ticket(db: Session, ticket: TicketCreate, location: str) -> Ticket:
+    logger.info(f"Creating ticket with title: {ticket.title}, description: {ticket.description}, location: {location}")
+    db_ticket = Ticket(**ticket.model_dump(), location=location)
     db.add(db_ticket)
     db.commit()
     db.refresh(db_ticket)
-    logger.info(f"Ticket created with ID: {db_ticket.id}")
+    logger.info(f"Ticket created successfully with ID: {db_ticket.id}")
     return db_ticket
 
 def get_ticket(db: Session, ticket_id: int) -> Ticket | None:

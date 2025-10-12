@@ -5,9 +5,13 @@ from app.repositories.ticket_repository import (
 from app.schemas.ticket import TicketCreate, TicketUpdate
 from app.models.ticket import Ticket
 
-def create_new_ticket(db: Session, ticket_data: TicketCreate) -> Ticket:
+def create_new_ticket(db: Session, ticket_data: TicketCreate):
     """Create a new ticket."""
-    return create_ticket(db, ticket_data)
+    new_ticket = Ticket(**ticket_data.dict())
+    db.add(new_ticket)
+    db.commit()
+    db.refresh(new_ticket)
+    return new_ticket
 
 def get_all_tickets(db: Session) -> list[Ticket]:
     """Retrieve all tickets."""

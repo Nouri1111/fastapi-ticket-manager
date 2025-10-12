@@ -10,11 +10,12 @@ from app.core.logger import logger  # Ensure logger is used for error logging
 
 router = APIRouter(prefix="/tickets", tags=["Tickets"])
 
+# Ajout d'un champ 'location' dans les endpoints concernés
 @router.post("/", response_model=TicketResponse, status_code=status.HTTP_201_CREATED)
 def create_ticket(ticket: TicketCreate, db: Session = Depends(get_db)):
     try:
         logger.info("Creating a new ticket.")
-        return create_new_ticket(db, ticket)
+        return create_new_ticket(db, ticket, ticket.location)  # Ensure location is passed from TicketCreate
     except Exception as e:
         logger.error(f"Error creating ticket: {e}")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
